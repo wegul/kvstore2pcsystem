@@ -10,15 +10,6 @@ public class Participant {
     private HashMap<String, String> map;//内存数据库
     private Stack<Job> log;//日志
 
-    /**
-     * 解析协调者发给参与者的RESP消息，并调用各方法：添加KV、删除KV、返回KV、回滚（即删除栈顶job）
-     *
-     * @param msg
-     * @return
-     */
-    private Job parse(String msg) {
-        return null;
-    }
 
     /**
      * 处理job，job内含任务信息（K V 还有method）

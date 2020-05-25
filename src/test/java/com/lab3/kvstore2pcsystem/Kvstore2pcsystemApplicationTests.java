@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class Kvstore2pcsystemApplicationTests {
 
     @Test
-    void contextLoads() {
+    void Client_input_test() {
+
     }
 
 }
