@@ -6,14 +6,14 @@ import java.util.ArrayList;
 //RESP响应封装类
 public class RespResponse {
     //响应类型枚举
-    public static int SET_OK = 201;           //SET成功
-    public static int GET_OK = 202;           //GET成功
-    public static int DEL_OK = 203;           //GET成功
-    public static int ERROR = 204;           //发生错误
-    public static int SET_COMMIT_DONE = 205;             // SET命令的commit指令执行完成
-    public static int SET_ROLLBACK_DONE = 206;           // SET命令的rollback指令执行完成
-    public static int DEL_COMMIT_DONE = 207;             // DEL命令的commit指令执行完成
-    public static int DEL_ROLLBACK_DONE = 208;           // DEL命令的rollback指令执行完成
+    public static final int SET_OK = 201;           //SET成功
+    public static final int GET_OK = 202;           //GET成功
+    public static final int DEL_OK = 203;           //GET成功
+    public static final int ERROR = 204;           //发生错误
+    public static final int SET_COMMIT_DONE = 205;             // SET命令的commit指令执行完成
+    public static final int SET_ROLLBACK_DONE = 206;           // SET命令的rollback指令执行完成
+    public static final int DEL_COMMIT_DONE = 207;             // DEL命令的commit指令执行完成
+    public static final int DEL_ROLLBACK_DONE = 208;           // DEL命令的rollback指令执行完成
 
     private String raw;                         //响应报文字符串
     private int responseType;                   //响应类型

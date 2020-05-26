@@ -12,7 +12,17 @@ public class RespParseUtil {
         String respStr = "*4\r\n$3\r\nSET\r\n$7\r\nCS06142\r\n$5\r\nCloud\r\n$9\r\nComputing\r\n";
         String respStr2 = "*3\r\n$3\r\nDEL\r\n$7\r\nCS06142\r\n$5\r\nCS162\r\n";
         RespRequest respRequest = parseRequest(respStr2);
+        RespResponse respResponse = new RespResponse();
+        respResponse.setResponseType(RespResponse.GET_OK);
+        ArrayList<String> list = new ArrayList<>();
+        list.add("湖南大学");
+        list.add("计算机科学与技术");
+        respResponse.setValue(list);
+        System.out.println(parseResponse(respResponse));
 
+//        String s="湖南大学";
+//        System.out.println(s.length());
+//        System.out.println(s.charAt(1));
     }
 
     /**
@@ -186,7 +196,51 @@ public class RespParseUtil {
      * @return
      */
     public static String parseResponse(RespResponse respResponse) {
-        return null;
+        StringBuilder raw = new StringBuilder("");
+        //响应有三种情况
+        switch (respResponse.getResponseType()) {
+            //GET第一阶段响应成功
+            case RespResponse.GET_OK: {
+                ArrayList<String> values = respResponse.getValue();
+                //查询的key不存在 返回 "*1\r\n$3\r\nnil\r\n"
+                if (values.size() <= 0) {
+                    raw.append("*1\r\n$3\r\nnil\r\n");
+                } else {
+                    //拼接响应value
+                    raw.append("*" + values.size() + "\r\n");
+                    for (String s : values) {
+                        raw.append("$" + s.length() + "\r\n").append(s + "\r\n");
+                    }
+                }
+                break;
+            }
+            //SET 第二阶段提交成功  设置kv成功
+            case RespResponse.SET_COMMIT_DONE: {
+                //SET成功则返回"+OK\r\n"
+                raw.append("+OK\r\n");
+                break;
+            }
+            //SET 第二阶段回滚成功  设置kv失败
+            case RespResponse.SET_ROLLBACK_DONE: {
+                //SET失败返回"-ERROR\r\n"
+                raw.append("-ERROR\r\n");
+                break;
+            }
+            //DEL 第二阶段提交成功  删除keys成功
+            case RespResponse.DEL_COMMIT_DONE: {
+                //DEL成功 返回删除的key数量
+                raw.append(":" + respResponse.getKeysRemoved() + "\r\n");
+                break;
+            }
+            //DEL 第二阶段回滚成功  删除keys失败
+            case RespResponse.DEL_ROLLBACK_DONE: {
+                //DEL失败返回"-ERROR\r\n"
+                raw.append("-ERROR\r\n");
+                break;
+            }
+        }
+        return raw.toString();
     }
+
 
 }

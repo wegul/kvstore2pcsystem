@@ -13,7 +13,6 @@ import java.util.Map;
 @Component
 public class NodeManager {
     public static HashMap<Participant, Date> participants = new HashMap<Participant, Date>();
-
     //获取当前存活的参与者列表
     public static ArrayList<Participant> getAliveParticipantList() {
         ArrayList<Participant> aliveParticipants = new ArrayList<Participant>();

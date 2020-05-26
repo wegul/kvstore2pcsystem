@@ -9,6 +9,7 @@ public class Participant {
     private String port;//参与者端口
     private HashMap<String, String> map;//内存数据库
     private Stack<Job> log;//日志
+    public int CNT;
 
     public String getCo_addr() {
         return co_addr;

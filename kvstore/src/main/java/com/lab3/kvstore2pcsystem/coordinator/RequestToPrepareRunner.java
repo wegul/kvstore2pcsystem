@@ -35,29 +35,28 @@ public class RequestToPrepareRunner implements Callable<RespResponse> {
     }
 
     private RespResponse sendCommand2Paticipant(Participant participant, RespRequest respRequest, String command, String extraParam) {
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        stringStringHashMap.put("respRequest", JSON.toJSONString(respRequest));
-        stringStringHashMap.put("extraParam", extraParam);
+
         String s = null;
+        String json = JSON.toJSONString(respRequest);
         switch (command) {
             case "SET": {
-                s = HttpClientUtils.doPost("http://" + participant.getCo_addr() + ":" + participant.getIp() + "/kvstore/set", stringStringHashMap);
+                s = HttpClientUtils.HttpPostWithJson("http://" + participant.getIp() + ":" + participant.getPort() + "/kvstore/set", json);
                 break;
             }
             case "GET": {
-                s = HttpClientUtils.doPost("http://localhost:8081/kvstore/get", stringStringHashMap);
+                s = HttpClientUtils.HttpPostWithJson("http://" + participant.getIp() + ":" + participant.getPort() + "/kvstore/get", json);
                 break;
             }
             case "DEL": {
-                s = HttpClientUtils.doPost("http://localhost:8081/kvstore/del", stringStringHashMap);
+                s = HttpClientUtils.HttpPostWithJson("http://" + participant.getIp() + ":" + participant.getPort() + "/kvstore/del", json);
                 break;
             }
             case "COMMIT": {
-                s = HttpClientUtils.doPost("http://localhost:8081/kvstore/commit", stringStringHashMap);
+                s = HttpClientUtils.HttpPostWithJson("http://" + participant.getIp() + ":" + participant.getPort() + "/kvstore/commit", json);
                 break;
             }
             case "ROLLBACK": {
-                s = HttpClientUtils.doPost("http://localhost:8081/kvstore/rollback", stringStringHashMap);
+                s = HttpClientUtils.HttpPostWithJson("http://" + participant.getIp() + ":" + participant.getPort() + "/kvstore/rollback", json);
                 break;
             }
             default:

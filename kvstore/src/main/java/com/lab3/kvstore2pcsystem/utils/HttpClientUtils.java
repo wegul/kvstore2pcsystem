@@ -1,21 +1,24 @@
 package com.lab3.kvstore2pcsystem.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.lab3.kvstore2pcsystem.protocol.RespRequest;
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
-import com.lab3.kvstore2pcsystem.protocol.RespRequest;
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 
 public class HttpClientUtils {
     public static final String charsetName = "UTF-8";
@@ -65,16 +68,20 @@ public class HttpClientUtils {
 
         String out = null;
         HttpClient client = new HttpClient();
-        HttpMethod method = new PostMethod(url);
 
         // 设置Http Post数据
         if (params != null) {
-            HttpMethodParams p = new HttpMethodParams();
+            char c = '?';
             for (Map.Entry<String, String> entry : params.entrySet()) {
-                p.setParameter(entry.getKey(), entry.getValue());
+                url += c;
+                c = '&';
+                url += entry.getKey() + "=" + entry.getValue();
             }
-            method.setParams(p);
+            System.out.println(url);
         }
+
+        HttpMethod method = new PostMethod(url);
+
         try {
             client.executeMethod(method);
             if (method.getStatusCode() == HttpStatus.SC_OK) {
@@ -92,6 +99,44 @@ public class HttpClientUtils {
         return out;
     }
 
+
+    //post请求参数为json格式
+    public static String HttpPostWithJson(String url, String json) {
+        String returnValue = "这是默认返回值，接口调用失败";
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        try {
+            //第一步：创建HttpClient对象
+            httpClient = HttpClients.createDefault();
+
+            //第二步：创建httpPost对象
+            HttpPost httpPost = new HttpPost(url);
+
+            //第三步：给httpPost设置JSON格式的参数
+            StringEntity requestEntity = new StringEntity(json, "utf-8");
+            requestEntity.setContentEncoding("UTF-8");
+            httpPost.setHeader("Content-type", "application/json");
+            httpPost.setEntity(requestEntity);
+
+            //第四步：发送HttpPost请求，获取返回值
+            returnValue = httpClient.execute(httpPost, responseHandler); //调接口获取返回值时，必须用此方法
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        //第五步：处理返回值
+        return returnValue;
+    }
+
+
     private static String inToString(InputStream inputStream) throws IOException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
@@ -103,13 +148,13 @@ public class HttpClientUtils {
         return str;
     }
 
-//    public static void main(String[] args) {
-////        String result = doGet("https://blog.csdn.net/zhangsweet1991");
-////        System.out.println(result);
+    public static void main(String[] args) {
+//        String result = doGet("https://blog.csdn.net/zhangsweet1991");
+//        System.out.println(result);
 //        RespRequest respRequest = new RespRequest();
 //        HashMap<String, String> stringStringHashMap = new HashMap<>();
 //        stringStringHashMap.put("param", JSON.toJSONString(respRequest));
-//        String s = HttpClientUtils.doPost("http://localhost:8081/kvstore/set", stringStringHashMap);
+//        String s = HttpClientUtils.HttpPostWithJson("http://localhost:8088/kvstore/set", JSON.toJSONString(respRequest));
 //        System.out.println(s);
-//    }
+    }
 }
