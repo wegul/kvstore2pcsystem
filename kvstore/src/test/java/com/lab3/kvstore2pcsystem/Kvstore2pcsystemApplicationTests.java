@@ -1,14 +1,11 @@
 package com.lab3.kvstore2pcsystem;
 
 import com.alibaba.fastjson.JSON;
-import com.lab3.kvstore2pcsystem.coordinator.CoordinatorServer;
-import com.lab3.kvstore2pcsystem.protocol.RespRequest;
-import com.lab3.kvstore2pcsystem.protocol.RespResponse;
-import com.lab3.kvstore2pcsystem.utils.HttpClientUtils;
+import com.lab3.kvstore2pcsystem.func_co.coordinator.CoordinatorServer;
+import com.lab3.kvstore2pcsystem.func_co.protocol.RespRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.xml.transform.Source;
 import java.util.ArrayList;
 import java.util.HashMap;
 
